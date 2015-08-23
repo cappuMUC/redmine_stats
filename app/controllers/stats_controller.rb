@@ -37,6 +37,7 @@ class StatsController < ApplicationController
     @assignees = @issues_by_assigned_to.map{|obj| User.find_by_id obj["assigned_to_id"]}.compact.uniq
     @used_projects = @issues_by_project.map{|obj| Project.find_by_id obj["project_id"]}.uniq if @s_project.nil?
 
+    @issue_handling = RedmineStats::IssueHandling.new(date_interval_to_range, RedmineStats::IssueHandling::Cumulative)
   end
 
   private
@@ -53,6 +54,13 @@ class StatsController < ApplicationController
 
   def get_project_identifier
       return params[:project] if params[:project].present? and params[:project] != "all_projects"
+  end
+
+  def date_interval_to_range
+    start_date = @dates[:begin_date] || Issue.first.created_on.to_s
+    end_date   = @dates[:end_date]   || Time.zone.now.to_s
+
+    RedmineStats::DateRange.new(start_date, end_date)
   end
 
 
