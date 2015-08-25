@@ -1,3 +1,4 @@
+# Value object - start and end date for reports always go together
 module RedmineStats
   class DateRange
     include Enumerable

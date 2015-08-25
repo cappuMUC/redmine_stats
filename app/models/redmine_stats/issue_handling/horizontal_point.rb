@@ -1,3 +1,5 @@
+# This class provides a standard key for grouping
+# issues in reports
 module RedmineStats
   class IssueHandling
     class HorizontalPoint

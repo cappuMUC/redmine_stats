@@ -1,3 +1,4 @@
+# Query object returning closed issues
 module RedmineStats
   class IssueHandling
     class ClosedIssuesQuery

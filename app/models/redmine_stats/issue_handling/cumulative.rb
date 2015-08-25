@@ -1,3 +1,6 @@
+# This class calculates a cumulative trend for opened
+# and closed issues
+
 module RedmineStats
   class IssueHandling
     class Cumulative
