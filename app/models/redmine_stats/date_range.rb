@@ -32,7 +32,7 @@ module RedmineStats
         date
       end
     rescue
-      raise UnparsableDate.new("Unable to parse #{date}. #{date.class}")
+      raise UnparsableDate.new("Unable to parse #{date}.")
     end
 
   end
