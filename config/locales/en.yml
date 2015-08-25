@@ -25,4 +25,4 @@ en:
   stats_label_legend:                               "Legend"
   stats_open_issues_chart_info:                     "Total opened issues since beginning of time, no filters"
   
-  issue_handling_trend:                             "Handing Issue Trend"
+  issue_handling_trend:                             "Open Issue Trend"
