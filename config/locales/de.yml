@@ -1,0 +1,26 @@
+# German strings go here for Rails i18n
+de:
+  stats_label_stats:       													Statistik
+  stats_label_issue_activity: 											Ticket-Aktivitäten
+  stats_label_new_issues_priorities:							  Prioritäten neuer Tickets
+  stats_label_more_active_issues: 									Weitere aktive Tickets
+  stats_label_filters: 													    Filter
+
+  stats_label_current_week: 											  Diese Woche
+  stats_label_current_month: 											  Dieser Monat
+  stats_label_last_week: 												    Letze Woche
+  stats_label_last_month: 												  Letzter Monat
+  stats_label_begining_of_time: 										Anbeginn der Zeit
+  stats_label_filtering_between:										"Filter von "
+  stats_label_and:														      bis
+  stats_label_open_issues_count:										"Derzeit offene Tickets: "
+  stats_all_projects:													      "Alle Projekte" 
+  stats_label_custom:                               "Benutzerdefiniert"
+  stats_label_change:                               "Ändern"
+  stats_label_begin:                                "Start"
+  stats_label_end:                                  "Ende"
+
+  stats_label_open_issues:                          "Offene Tickets"
+  stats_label_closed_issues:                        "Geschlossene Tickets"
+  stats_label_legend:                               "Legende"
+  stats_open_issues_chart_info:                     "Alle offenen Tickets seit Anbeginn der Zeit; keine Filter"
