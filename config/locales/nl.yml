@@ -13,7 +13,7 @@ en:
   stats_label_begining_of_time: 										Sinds het Begin der Tijden
   stats_label_filtering_between:										"Filtering tussen: "
   stats_label_and:														      en
-  stats_label_open_issues_count:										"Huidige Geopenede Issues: "
+  stats_label_open_issues_count:										"Huidige Geopende Issues: "
   stats_all_projects:													      "Alle Projecten" 
   stats_label_custom:                               "Specifiek"
   stats_label_change:                               "Wijzig"
