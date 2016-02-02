@@ -4,6 +4,7 @@ en:
   stats_label_issue_activity: 											Issue Activity
   stats_label_new_issues_priorities:							  New Issue Priorities
   stats_label_more_active_issues: 									More active issues
+  stats_label_more_postponed_issues: 									More postponed issues
   stats_label_filters: 													    Filters
 
   stats_label_current_week: 											  Current Week
