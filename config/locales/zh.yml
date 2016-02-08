@@ -1,5 +1,5 @@
 # English strings go here for Rails i18n
-en:
+zh:
   stats_label_stats:                                                                                                            统计
   stats_label_issue_activity:                                                                                   活动
   stats_label_new_issues_priorities:                                                      新问题属性
