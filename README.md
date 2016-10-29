@@ -18,6 +18,8 @@ Be sure to put the plugin in the redmine plugin folder with the exact name: "red
 
 You will not need to do any migration
 
+For Redmine version 3.2.x or higher : Just move plugin assets folder from <RedmineRootFolder>/plugin/redmine_stats/assets/* to <RedmineRootFolder>/plugin_assets/
+
 redmine_stats adds a new permission to user roles so that only allowed users can see statistics
 
 Go to Administrator -> Roles & Permissions -> (Select the role you want to give permissions) and in the Project group you'll have the "Access statistics" permission, just enable it and save
@@ -26,6 +28,7 @@ A new item in the top menu will appear to access the stats page
 
 Compatibility:
 ==
+Version 3.2.x or higher is compatibility (follow the installation instructions)
 
 This plugin was created to work with redmine 2.5.2, Rails 3.2 and Ruby 2.1, older software versions may have problems
 Currently it is known to be incompatible with redmine 2.2 and older.
