@@ -43,10 +43,6 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
 	<canvas style="display: block; margin: 0 auto;" id="chart_assignee"  width="400" height="250"></canvas><br>
 	<%= render :partial => 'simple', 
 			:locals => { :data => @issues_by_assigned_to, :field_name => "assigned_to_id", :rows => @assignees, :filter_by => "created_on" } %>
-	<br /> <br />
-	
-	<h3><%= l(:stats_label_more_active_issues)%></h3><br>
-	<%= render :partial => 'issues/list_simple', :locals => { :issues => @top5, :filter_by => "created_on" } %>
 </div>
 
 
@@ -73,7 +69,10 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
 					:locals => { :data => @issues_by_author, :field_name => "author_id", :rows => @authors, :filter_by => "created_on" } 
 		end
 		%>
-	<br />
+	<br /> <br />
+	
+	<h3><%= l(:stats_label_more_active_issues)%></h3><br>
+	<%= render :partial => 'issues/list_simple', :locals => { :issues => @top10, :filter_by => "created_on" } %>
 </div>
 
 

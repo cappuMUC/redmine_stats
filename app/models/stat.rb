@@ -4,7 +4,7 @@ class Stat < ActiveRecord::Base
 
  
   #issues more active
-  def self.top5(params)
+  def self.top10(params)
 
     issues = []
     where = ""
@@ -40,7 +40,7 @@ class Stat < ActiveRecord::Base
     where(where).
     group("journalized_id").
     order("count DESC").
-    limit(5).each do |row|
+    limit(10).each do |row|
       issues << Issue.find(row.issue.id)
     end
     
