@@ -18,7 +18,7 @@ Be sure to put the plugin in the redmine plugin folder with the exact name: "red
 
 You will not need to do any migration
 
-For Redmine version 3.2.x or higher : Just move plugin assets folder from <RedmineRootFolder>/plugin/redmine_stats/assets/* to <RedmineRootFolder>/plugin_assets/
+For Redmine version 3.2.x or higher : Just move plugin assets folder from RedmineRootFolder/plugin/redmine_stats/assets/* to RedmineRootFolder/plugin_assets/
 
 redmine_stats adds a new permission to user roles so that only allowed users can see statistics
 
