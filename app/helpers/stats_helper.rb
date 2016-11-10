@@ -30,6 +30,17 @@ module StatsHelper
     [format_date(dates[:begin_date]), format_date(dates[:end_date])]
   end
 
+  def adjusted_issue_handling_legend(full_legend)
+    adjusted_legend = Array.new(full_legend.length, '')
 
+    adjusted_legend[0]  = full_legend.first
+    adjusted_legend[-1] = full_legend.last
+
+    adjusted_legend
+  end
+
+  def able_to_graph_issue_handling?(issue_handling = @issue_handling)
+    issue_handling.horizontal_axis.length > 2
+  end
 
 end

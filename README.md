@@ -35,6 +35,10 @@ Currently it is known to be incompatible with redmine 2.2 and older.
 
 You will also need a browser supporting html5 canvas. Check if your browser is compatible [here](http://caniuse.com/#feat=canvas)
 
+Testing:
+== 
+
+    rake redmine:plugins:test:units NAME=redmine_stats
 
 NOTE:
 ==

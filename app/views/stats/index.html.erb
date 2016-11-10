@@ -81,6 +81,11 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
 	
 	<h3><%= l(:stats_label_more_active_issues)%></h3><br>
 	<%= render :partial => 'issues/list_simple', :locals => { :issues => @top10, :filter_by => "created_on" } %>
+
+    <h3><%= l(:issue_handling_trend) %></h3><br>
+    <% if able_to_graph_issue_handling? %>
+      <canvas style="display: block; margin: 0 auto;" id="issue_handling_trend"  width="400" height="250"></canvas><br>
+    <% end %>
 </div>
 
 
@@ -94,6 +99,17 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
 
 <script>
 
+
+    // Chart Issue Handling Trend
+    var chart_issue_handling_trend_data = {
+      labels : <%= raw adjusted_issue_handling_legend(@issue_handling.horizontal_axis) %>,
+      datasets : [
+        {
+            label: "Trend",
+            <%= raw green_color %>
+            data : <%= @issue_handling.trend.to_json %>
+        },
+    ]};
 
 
 	//open issues chart
@@ -338,6 +354,21 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
 		window.myLine = new Chart(ctx5).Bar(chart_open_issues, {
 			barShowStroke: false
 		});
+
+        var issue_handling_element = document.getElementById('issue_handling_trend');
+
+        if (issue_handling_element !== null) {
+          var ctx6 = issue_handling_element.getContext('2d');
+
+          if (ctx6 != undefined) {
+            window.myLine = new Chart(ctx6).Line(chart_issue_handling_trend_data, {
+              responsive: false,
+              pointDot: false,
+              scaleShowLabels: true,
+              showTooltips: false
+            });
+          }
+        }
 
 	});
 
