@@ -106,21 +106,21 @@ class Stat < ActiveRecord::Base
     when [:mysql, :sqlite, :postgresql]
       if project.nil?
         ActiveRecord::Base.connection.exec_query("SELECT count(project_id), project_id from issues group by project_id  order by count(project_id) DESC LIMIT 5").each do |row|
-            data << Project.find(row[1])
+            data << Project.find(row["project_id"])
         end
       else
         ActiveRecord::Base.connection.exec_query("SELECT count(author_id), author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC LIMIT 5").each do |row|
-            data << User.find(row[1])
+            data << User.find(row["author_id"])
         end
       end
     when :sqlserver
       if project.nil?
         ActiveRecord::Base.connection.exec_query("SELECT TOP 5 count(project_id) project_id_cnt, project_id from issues group by project_id  order by count(project_id) DESC").each do |row|
-            data << Project.find(row[1])
+            data << Project.find(row["project_id"])
         end
       else
         ActiveRecord::Base.connection.exec_query("SELECT TOP 5 count(author_id) author_id_cnt, author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC").each do |row|
-            data << User.find(row[1])
+            data << User.find(row["author_id"])
         end
       end
     else
