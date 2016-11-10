@@ -298,17 +298,20 @@ class Stat < ActiveRecord::Base
 
     select_field = options[:field]
     joins = options[:joins]
-    begin_date = options[:begin_date]
-    end_date = options[:end_date]
+    begin_date_string = options[:begin_date]
+    end_date_string = options[:end_date]
     project = options[:project]
-    limit = " LIMIT #{options[:limit]}" unless options[:limit].nil?
     order_by = " ORDER BY total DESC" unless options[:order_by].nil?
 
     adapter_type = ActiveRecord::Base.connection.adapter_name.downcase.to_sym
-    case adapter_type
-    when [:mysql, :sqlite, :postgresql]
-    when :sqlserver
-      limit = " TOP #{options[:limit]}" unless options[:limit].nil?
+    limit = " "
+    if not options[:limit].nil? and not options[:limit].strip.empty?
+      case adapter_type
+      when [:mysql, :sqlite, :postgresql]
+        limit = " LIMIT #{options[:limit]}"
+      when :sqlserver
+        limit = " TOP #{options[:limit]}"
+      end
     end
 
 
@@ -316,13 +319,13 @@ class Stat < ActiveRecord::Base
 
     where = "#{Issue.table_name}.#{select_field}=j.id"
 
-    unless begin_date.nil? and end_date.nil?
-      begin_date = begin_date.to_datetime
-      end_date = (end_date + 1.day).to_datetime
+    unless begin_date_string.nil? and end_date_string.nil?
+      begin_date = begin_date_string.to_datetime
+      end_date = (end_date_string + 1.day).to_datetime
       
       if adapter_type == :sqlserver
-        begin_date = begin_date.to_s(:db)
-        end_date = (end_date + 1.day).to_s(:db)
+        begin_date = begin_date_string.to_s(:db)
+        end_date = (end_date_string + 1.day).to_s(:db)
       end
 
       where << " and 
