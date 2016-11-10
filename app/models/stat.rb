@@ -115,11 +115,11 @@ class Stat < ActiveRecord::Base
       end
     when :sqlserver
       if project.nil?
-        ActiveRecord::Base.connection.execute("SELECT TOP 5 count(project_id), project_id from issues group by project_id  order by count(project_id) DESC").each do |row|
+        ActiveRecord::Base.connection.execute("SELECT TOP 5 count(project_id) project_id_cnt, project_id from issues group by project_id  order by count(project_id) DESC").each do |row|
             data << Project.find(row[1])
         end
       else
-        ActiveRecord::Base.connection.execute("SELECT TOP 5 count(author_id), author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC").each do |row|
+        ActiveRecord::Base.connection.execute("SELECT TOP 5 count(author_id) author_id_cnt, author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC").each do |row|
             data << User.find(row[1])
         end
       end
