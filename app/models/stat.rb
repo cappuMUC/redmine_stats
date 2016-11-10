@@ -105,21 +105,21 @@ class Stat < ActiveRecord::Base
     case adapter_type
     when [:mysql, :sqlite, :postgresql]
       if project.nil?
-        ActiveRecord::Base.connection.execute("SELECT count(project_id), project_id from issues group by project_id  order by count(project_id) DESC LIMIT 5").each do |row|
+        ActiveRecord::Base.connection.exec_query("SELECT count(project_id), project_id from issues group by project_id  order by count(project_id) DESC LIMIT 5").each do |row|
             data << Project.find(row[1])
         end
       else
-        ActiveRecord::Base.connection.execute("SELECT count(author_id), author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC LIMIT 5").each do |row|
+        ActiveRecord::Base.connection.exec_query("SELECT count(author_id), author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC LIMIT 5").each do |row|
             data << User.find(row[1])
         end
       end
     when :sqlserver
       if project.nil?
-        ActiveRecord::Base.connection.execute("SELECT TOP 5 count(project_id) project_id_cnt, project_id from issues group by project_id  order by count(project_id) DESC").each do |row|
+        ActiveRecord::Base.connection.exec_query("SELECT TOP 5 count(project_id) project_id_cnt, project_id from issues group by project_id  order by count(project_id) DESC").each do |row|
             data << Project.find(row[1])
         end
       else
-        ActiveRecord::Base.connection.execute("SELECT TOP 5 count(author_id) author_id_cnt, author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC").each do |row|
+        ActiveRecord::Base.connection.exec_query("SELECT TOP 5 count(author_id) author_id_cnt, author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC").each do |row|
             data << User.find(row[1])
         end
       end
@@ -144,7 +144,7 @@ class Stat < ActiveRecord::Base
     adapter_type = ActiveRecord::Base.connection.adapter_name.downcase.to_sym
     case adapter_type
     when [:mysql, :sqlite, :postgresql]
-      ActiveRecord::Base.connection.execute("select t3.user_id, count(t3.user_id) as c from roles as t1 
+      ActiveRecord::Base.connection.exec_query("select t3.user_id, count(t3.user_id) as c from roles as t1 
           INNER JOIN member_roles as t2 on
           t1.id = t2.role_id
           inner join members as t3
@@ -158,7 +158,7 @@ class Stat < ActiveRecord::Base
             users << User.find(row[0])
           end
     when :sqlserver
-      ActiveRecord::Base.connection.execute("select top 5 t3.user_id, count(t3.user_id) as c from roles as t1 
+      ActiveRecord::Base.connection.exec_query("select top 5 t3.user_id, count(t3.user_id) as c from roles as t1 
           INNER JOIN member_roles as t2 on
           t1.id = t2.role_id
           inner join members as t3
