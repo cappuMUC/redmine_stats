@@ -305,7 +305,7 @@ class Stat < ActiveRecord::Base
 
     adapter_type = ActiveRecord::Base.connection.adapter_name.downcase.to_sym
     limit = " "
-    if not options[:limit].nil? and not options[:limit].strip.empty?
+    if not options[:limit].nil? and options[:limit].to_s.strip.length > 0
       case adapter_type
       when [:mysql, :sqlite, :postgresql]
         limit = " LIMIT #{options[:limit]}"
