@@ -33,6 +33,8 @@ class StatsController < ApplicationController
   	@issues_last_days = Stat.issues_by_days(parameters)
   	@issues_by_author = Stat.issues_by_author(parameters)
     @top10 = Stat.top10(parameters)
+    @top5 = Stat.top5(parameters)
+    @top5PostPoned = Stat.top5PostPoned(parameters)
 
     @assignees = @issues_by_assigned_to.map{|obj| User.find_by_id obj["assigned_to_id"]}.compact.uniq
     @used_projects = @issues_by_project.map{|obj| Project.find_by_id obj["project_id"]}.uniq if @s_project.nil?

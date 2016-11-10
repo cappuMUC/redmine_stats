@@ -4,6 +4,7 @@ fr:
   stats_label_issue_activity:                       Activité des demandes
   stats_label_new_issues_priorities:                Priorité des nouvelles demandes
   stats_label_more_active_issues:                   Demandes les plus actives
+  stats_label_more_postponed_issues:                   Demandes les plus retardees
   stats_label_filters:                              Filtres
 
   stats_label_current_week:                         Semaine courante
