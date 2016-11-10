@@ -170,7 +170,7 @@ class Stat < ActiveRecord::Base
           order by c desc").each do |row|
             users << User.find(row[0])
           end
-
+    end
 		users
 
   end
