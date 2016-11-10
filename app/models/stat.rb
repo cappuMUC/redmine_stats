@@ -304,6 +304,14 @@ class Stat < ActiveRecord::Base
     limit = " LIMIT #{options[:limit]}" unless options[:limit].nil?
     order_by = " ORDER BY total DESC" unless options[:order_by].nil?
 
+    adapter_type = ActiveRecord::Base.connection.adapter_name.downcase.to_sym
+    case adapter_type
+    when [:mysql, :sqlite, :postgresql]
+    when :sqlserver
+      limit = " TOP #{options[:limit]}" unless options[:limit].nil?
+    end
+
+
     #create the where clause
 
     where = "#{Issue.table_name}.#{select_field}=j.id"
@@ -312,6 +320,11 @@ class Stat < ActiveRecord::Base
       begin_date = begin_date.to_datetime
       end_date = (end_date + 1.day).to_datetime
       
+      if adapter_type == :sqlserver
+        begin_date = begin_date.to_s(:db)
+        end_date = (end_date + 1.day).to_s(:db)
+      end
+
       where << " and 
       ((#{Issue.table_name}.created_on >= '#{begin_date}' and #{Issue.table_name}.created_on <= '#{end_date}') or
         (#{Issue.table_name}.closed_on >= '#{begin_date}' and #{Issue.table_name}.closed_on <= '#{end_date}'))"
@@ -325,21 +338,40 @@ class Stat < ActiveRecord::Base
       
     # end of create the where clause
 
-    sql = " select #{IssueStatus.table_name}.id as status_id, 
-				 #{IssueStatus.table_name}.is_closed as closed, 
-				 j.id as #{select_field},
-				 count(#{Issue.table_name}.id) as total 
-				 from #{Issue.table_name}
-				 inner join #{Project.table_name}
-				 on #{Issue.table_name}.project_id=#{Project.table_name}.id
-				 inner join #{IssueStatus.table_name}
-				 on #{Issue.table_name}.status_id = #{IssueStatus.table_name}.id
-				 inner join #{joins} as j
-				 on #{Issue.table_name}.#{select_field} = j.id
-				 where
-				 #{Issue.table_name}.status_id=#{IssueStatus.table_name}.id 
-				 and #{where}
-				 group by #{IssueStatus.table_name}.id, #{IssueStatus.table_name}.is_closed, j.id #{order_by} #{limit} "
+    case adapter_type
+    when [:mysql, :sqlite, :postgresql]
+      sql = " select #{IssueStatus.table_name}.id as status_id, 
+          #{IssueStatus.table_name}.is_closed as closed, 
+          j.id as #{select_field},
+          count(#{Issue.table_name}.id) as total 
+          from #{Issue.table_name}
+          inner join #{Project.table_name}
+          on #{Issue.table_name}.project_id=#{Project.table_name}.id
+          inner join #{IssueStatus.table_name}
+          on #{Issue.table_name}.status_id = #{IssueStatus.table_name}.id
+          inner join #{joins} as j
+          on #{Issue.table_name}.#{select_field} = j.id
+          where
+          #{Issue.table_name}.status_id=#{IssueStatus.table_name}.id 
+          and #{where}
+          group by #{IssueStatus.table_name}.id, #{IssueStatus.table_name}.is_closed, j.id #{order_by} #{limit} "
+    when :sqlserver
+      sql = " select top #{limit} #{IssueStatus.table_name}.id as status_id, 
+          #{IssueStatus.table_name}.is_closed as closed, 
+          j.id as #{select_field},
+          count(#{Issue.table_name}.id) as total 
+          from #{Issue.table_name}
+          inner join #{Project.table_name}
+          on #{Issue.table_name}.project_id=#{Project.table_name}.id
+          inner join #{IssueStatus.table_name}
+          on #{Issue.table_name}.status_id = #{IssueStatus.table_name}.id
+          inner join #{joins} as j
+          on #{Issue.table_name}.#{select_field} = j.id
+          where
+          #{Issue.table_name}.status_id=#{IssueStatus.table_name}.id 
+          and #{where}
+          group by #{IssueStatus.table_name}.id, #{IssueStatus.table_name}.is_closed, j.id #{order_by} "
+    end
 
     
     # sql = "select s.id as status_id, 
