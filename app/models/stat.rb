@@ -101,16 +101,31 @@ class Stat < ActiveRecord::Base
   	
   	data = []
 
-  	if project.nil?
-  		ActiveRecord::Base.connection.execute("SELECT count(project_id), project_id from issues group by project_id  order by count(project_id) DESC LIMIT 5").each do |row|
-					data << Project.find(row[1])
-			end
-  	else
+    adapter_type = ActiveRecord::Base.connection.adapter_name.downcase.to_sym
+    case adapter_type
+    when [:mysql, :sqlite, :postgresql]
+      if project.nil?
+        ActiveRecord::Base.connection.execute("SELECT count(project_id), project_id from issues group by project_id  order by count(project_id) DESC LIMIT 5").each do |row|
+            data << Project.find(row[1])
+        end
+      else
+        ActiveRecord::Base.connection.execute("SELECT count(author_id), author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC LIMIT 5").each do |row|
+            data << User.find(row[1])
+        end
+      end
+    when :sqlserver
+      if project.nil?
+        ActiveRecord::Base.connection.execute("SELECT TOP 5 count(project_id), project_id from issues group by project_id  order by count(project_id) DESC").each do |row|
+            data << Project.find(row[1])
+        end
+      else
+        ActiveRecord::Base.connection.execute("SELECT TOP 5 count(author_id), author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC").each do |row|
+            data << User.find(row[1])
+        end
+      end
+    else
 
-			ActiveRecord::Base.connection.execute("SELECT count(author_id), author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC LIMIT 5").each do |row|
-					data << User.find(row[1])
-			end
-		end
+    end
 
 		data
 		
@@ -126,20 +141,35 @@ class Stat < ActiveRecord::Base
 
   	users = []
 
-		ActiveRecord::Base.connection.execute("select t3.user_id, count(t3.user_id) as c from roles as t1 
-        INNER JOIN member_roles as t2 on
-        t1.id = t2.role_id
-        inner join members as t3
-        on t3.id = t2.member_id
-        inner join users as t4
-        on t3.user_id = t4.id
-        where (t1.assignable = 't' or t1.assignable = 1) and t4.type = 'User'
-        group by t3.user_id
-        order by c desc
-        limit 5").each do |row|
-					users << User.find(row[0])
-
-				end
+    adapter_type = ActiveRecord::Base.connection.adapter_name.downcase.to_sym
+    case adapter_type
+    when [:mysql, :sqlite, :postgresql]
+      ActiveRecord::Base.connection.execute("select t3.user_id, count(t3.user_id) as c from roles as t1 
+          INNER JOIN member_roles as t2 on
+          t1.id = t2.role_id
+          inner join members as t3
+          on t3.id = t2.member_id
+          inner join users as t4
+          on t3.user_id = t4.id
+          where (t1.assignable = 't' or t1.assignable = 1) and t4.type = 'User'
+          group by t3.user_id
+          order by c desc
+          limit 5").each do |row|
+            users << User.find(row[0])
+          end
+    when :sqlserver
+      ActiveRecord::Base.connection.execute("select top 5 t3.user_id, count(t3.user_id) as c from roles as t1 
+          INNER JOIN member_roles as t2 on
+          t1.id = t2.role_id
+          inner join members as t3
+          on t3.id = t2.member_id
+          inner join users as t4
+          on t3.user_id = t4.id
+          where (t1.assignable = 't' or t1.assignable = 1) and t4.type = 'User'
+          group by t3.user_id
+          order by c desc").each do |row|
+            users << User.find(row[0])
+          end
 
 		users
 
