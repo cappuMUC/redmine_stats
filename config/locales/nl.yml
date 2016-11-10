@@ -1,0 +1,26 @@
+# Dutch strings go here for Rails i18n
+en:
+  stats_label_stats:       													Statistieken
+  stats_label_issue_activity: 											Issue Activiteit
+  stats_label_new_issues_priorities:							  Nieuw Issue Prioriteiten
+  stats_label_more_active_issues: 									Meer actieve issues
+  stats_label_filters: 													    Filters
+
+  stats_label_current_week: 											  Huidige Week
+  stats_label_current_month: 											  Huidige Maand
+  stats_label_last_week: 												    Vorige Week
+  stats_label_last_month: 												  Vorige Maand
+  stats_label_begining_of_time: 										Sinds het Begin der Tijden
+  stats_label_filtering_between:										"Filtering tussen: "
+  stats_label_and:														      en
+  stats_label_open_issues_count:										"Huidige Geopende Issues: "
+  stats_all_projects:													      "Alle Projecten" 
+  stats_label_custom:                               "Specifiek"
+  stats_label_change:                               "Wijzig"
+  stats_label_begin:                                "Begin"
+  stats_label_end:                                  "Einde"
+
+  stats_label_open_issues:                          "Open Issues"
+  stats_label_closed_issues:                        "Gesloten Issues"
+  stats_label_legend:                               "Legenda"
+  stats_open_issues_chart_info:                     "Totaal geopende issues sinds het begin der tijden, geen filters"
