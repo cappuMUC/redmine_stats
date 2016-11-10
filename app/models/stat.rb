@@ -2,14 +2,12 @@ class Stat < ActiveRecord::Base
   unloadable
 
 
- 
   #issues more active
-  def self.top10(params)
+  def self.topX(params, limit)
 
     issues = []
     where = ""
     where_pre = nil
-
 
     begin_date = params[:begin_date].to_datetime unless params[:begin_date].nil?
     end_date = (params[:end_date] + 1.day).to_datetime unless params[:end_date].nil?
@@ -18,16 +16,9 @@ class Stat < ActiveRecord::Base
     #creating the query... this code is really bad....
     
     where_pre = "#{Issue.table_name}.project_id = #{project.id}"  if project.present? && project != "all_projects"
-   
-
-    
-
-    
-
     if params[:begin_date].nil?
       where = where_pre
     else
-      
       
       if where_pre.nil?
         where =["#{Issue.table_name}.created_on >= ? AND #{Issue.table_name}.created_on < ?", begin_date, end_date] 
@@ -40,10 +31,26 @@ class Stat < ActiveRecord::Base
     where(where).
     group("journalized_id").
     order("count DESC").
-    limit(10).each do |row|
+    limit(limit).each do |row|
       issues << Issue.find(row.issue.id)
     end
     
+    issues
+
+  end
+ 
+  #issues more active
+  def self.top5(params)
+
+    issues = self.topX(params, 5)
+    issues
+
+  end
+ 
+  #issues more active
+  def self.top10(params)
+
+    issues = self.topX(params, 10)
     issues
 
   end
