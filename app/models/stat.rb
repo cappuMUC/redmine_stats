@@ -359,7 +359,7 @@ class Stat < ActiveRecord::Base
           and #{where}
           group by #{IssueStatus.table_name}.id, #{IssueStatus.table_name}.is_closed, j.id #{order_by} #{limit} "
     when :sqlserver
-      sql = " select top #{limit} #{IssueStatus.table_name}.id as status_id, 
+      sql = " select #{limit} #{IssueStatus.table_name}.id as status_id, 
           #{IssueStatus.table_name}.is_closed as closed, 
           j.id as #{select_field},
           count(#{Issue.table_name}.id) as total 
