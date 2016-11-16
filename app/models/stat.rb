@@ -109,18 +109,7 @@ class Stat < ActiveRecord::Base
   	data = []
 
     adapter_type = ActiveRecord::Base.connection.adapter_name.downcase.to_sym
-    case adapter_type
-    when [:mysql, :sqlite, :postgresql]
-      if project.nil?
-        ActiveRecord::Base.connection.exec_query("SELECT count(project_id), project_id from issues group by project_id  order by count(project_id) DESC LIMIT 5").each do |row|
-            data << Project.find(row["project_id"])
-        end
-      else
-        ActiveRecord::Base.connection.exec_query("SELECT count(author_id), author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC LIMIT 5").each do |row|
-            data << User.find(row["author_id"])
-        end
-      end
-    when :sqlserver
+    if adapter_type == :sqlserver
       if project.nil?
         ActiveRecord::Base.connection.exec_query("SELECT TOP 5 count(project_id) project_id_cnt, project_id from issues group by project_id  order by count(project_id) DESC").each do |row|
             data << Project.find(row["project_id"])
@@ -131,7 +120,15 @@ class Stat < ActiveRecord::Base
         end
       end
     else
-
+      if project.nil?
+        ActiveRecord::Base.connection.exec_query("SELECT count(project_id), project_id from issues group by project_id  order by count(project_id) DESC LIMIT 5").each do |row|
+            data << Project.find(row["project_id"])
+        end
+      else
+        ActiveRecord::Base.connection.exec_query("SELECT count(author_id), author_id from issues where project_id = '#{project.id}' group by author_id  order by count(author_id) DESC LIMIT 5").each do |row|
+            data << User.find(row["author_id"])
+        end
+      end
     end
 
 		data
@@ -149,8 +146,20 @@ class Stat < ActiveRecord::Base
   	users = []
 
     adapter_type = ActiveRecord::Base.connection.adapter_name.downcase.to_sym
-    case adapter_type
-    when [:mysql, :sqlite, :postgresql]
+    if adapter_type == :sqlserver
+      ActiveRecord::Base.connection.exec_query("select top 5 t3.user_id, count(t3.user_id) as c from roles as t1 
+          INNER JOIN member_roles as t2 on
+          t1.id = t2.role_id
+          inner join members as t3
+          on t3.id = t2.member_id
+          inner join users as t4
+          on t3.user_id = t4.id
+          where (t1.assignable = 't' or t1.assignable = 1) and t4.type = 'User'
+          group by t3.user_id
+          order by c desc").each do |row|
+            users << User.find(row[0])
+          end
+    else
       ActiveRecord::Base.connection.exec_query("select t3.user_id, count(t3.user_id) as c from roles as t1 
           INNER JOIN member_roles as t2 on
           t1.id = t2.role_id
@@ -162,19 +171,6 @@ class Stat < ActiveRecord::Base
           group by t3.user_id
           order by c desc
           limit 5").each do |row|
-            users << User.find(row[0])
-          end
-    when :sqlserver
-      ActiveRecord::Base.connection.exec_query("select top 5 t3.user_id, count(t3.user_id) as c from roles as t1 
-          INNER JOIN member_roles as t2 on
-          t1.id = t2.role_id
-          inner join members as t3
-          on t3.id = t2.member_id
-          inner join users as t4
-          on t3.user_id = t4.id
-          where (t1.assignable = 't' or t1.assignable = 1) and t4.type = 'User'
-          group by t3.user_id
-          order by c desc").each do |row|
             users << User.find(row[0])
           end
     end
@@ -313,11 +309,10 @@ class Stat < ActiveRecord::Base
     adapter_type = ActiveRecord::Base.connection.adapter_name.downcase.to_sym
     limit = " "
     if not options[:limit].nil? and options[:limit].to_s.strip.length > 0
-      case adapter_type
-      when [:mysql, :sqlite, :postgresql]
-        limit = " LIMIT #{options[:limit]}"
-      when :sqlserver
+      if adapter_type == :sqlserver
         limit = " TOP #{options[:limit]}"
+      else
+        limit = " LIMIT #{options[:limit]}"
       end
     end
 
@@ -347,25 +342,8 @@ class Stat < ActiveRecord::Base
     
       
     # end of create the where clause
-
-    case adapter_type
-    when [:mysql, :sqlite, :postgresql]
-      sql = " select #{IssueStatus.table_name}.id as status_id, 
-          #{IssueStatus.table_name}.is_closed as closed, 
-          j.id as #{select_field},
-          count(#{Issue.table_name}.id) as total 
-          from #{Issue.table_name}
-          inner join #{Project.table_name}
-          on #{Issue.table_name}.project_id=#{Project.table_name}.id
-          inner join #{IssueStatus.table_name}
-          on #{Issue.table_name}.status_id = #{IssueStatus.table_name}.id
-          inner join #{joins} as j
-          on #{Issue.table_name}.#{select_field} = j.id
-          where
-          #{Issue.table_name}.status_id=#{IssueStatus.table_name}.id 
-          and #{where}
-          group by #{IssueStatus.table_name}.id, #{IssueStatus.table_name}.is_closed, j.id #{order_by} #{limit} "
-    when :sqlserver
+          
+    if adapter_type == :sqlserver
       sql = " select #{limit} #{IssueStatus.table_name}.id as status_id, 
           #{IssueStatus.table_name}.is_closed as closed, 
           j.id as #{select_field},
@@ -381,6 +359,22 @@ class Stat < ActiveRecord::Base
           #{Issue.table_name}.status_id=#{IssueStatus.table_name}.id 
           and #{where}
           group by #{IssueStatus.table_name}.id, #{IssueStatus.table_name}.is_closed, j.id #{order_by} "
+    else
+      sql = " select #{IssueStatus.table_name}.id as status_id, 
+          #{IssueStatus.table_name}.is_closed as closed, 
+          j.id as #{select_field},
+          count(#{Issue.table_name}.id) as total 
+          from #{Issue.table_name}
+          inner join #{Project.table_name}
+          on #{Issue.table_name}.project_id=#{Project.table_name}.id
+          inner join #{IssueStatus.table_name}
+          on #{Issue.table_name}.status_id = #{IssueStatus.table_name}.id
+          inner join #{joins} as j
+          on #{Issue.table_name}.#{select_field} = j.id
+          where
+          #{Issue.table_name}.status_id=#{IssueStatus.table_name}.id 
+          and #{where}
+          group by #{IssueStatus.table_name}.id, #{IssueStatus.table_name}.is_closed, j.id #{order_by} #{limit} "
     end
 
     
