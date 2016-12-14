@@ -124,7 +124,7 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
         	
         	count = 0
         	@open_issues.each{|p| 
-						count += p["total"] if (p["closed"] == "f" or p["closed"] ==0 )and priority.id == p["priority_id"]
+						count += p["total"] if (p["closed"] == "f" or p["closed"] == 0 or p["closed"] == false or p["closed"] == false) and priority.id == p["priority_id"]
         	}
 
         	count
@@ -167,7 +167,7 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
             	
             	total = 0
             	@issues_by_priority.each{|p| 
-								total += p["total"] if (p["closed"] == "t" or p["closed"] == 1) and priority.id == p["priority_id"]
+								total += p["total"] if (p["closed"] == "t" or p["closed"] == 1 or p["closed"] == true) and priority.id == p["priority_id"]
             	}
 
             	total
@@ -181,7 +181,7 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
             	
             	total = 0
             	@issues_by_priority.each{|p| 
-								total += p["total"] if (p["closed"] == "f" or p["closed"] == 0) and priority.id == p["priority_id"]
+								total += p["total"] if (p["closed"] == "f" or p["closed"] == 0 or p["closed"] == false) and priority.id == p["priority_id"]
             	}
 
             	total
@@ -204,7 +204,7 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
 	            		total = 0
 
 		            	@issues_by_assigned_to.each{|i| 
-										total += i["total"] if (i["closed"] == "f" or i["closed"] ==0) and a.id == i["assigned_to_id"]
+										total += i["total"] if (i["closed"] == "f" or i["closed"] == 0 or i["closed"] == false) and a.id == i["assigned_to_id"]
 		            	}
 
 		            	total
@@ -219,7 +219,7 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
 	            		total = 0
 
 		            	@issues_by_assigned_to.each{|i| 
-										total += i["total"] if (i["closed"] == "t" or i["closed"] == 1) and a.id == i["assigned_to_id"]
+										total += i["total"] if (i["closed"] == "t" or i["closed"] == 1 or i["closed"] == true) and a.id == i["assigned_to_id"]
 		            	}
 
 		            	total
@@ -247,7 +247,7 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
         		total = 0
 
           	@issues_by_project.each{|i| 
-							total += i["total"] if (i["closed"] == "f" or i["closed"] == 0) and a.id == i["project_id"]
+							total += i["total"] if (i["closed"] == "f" or i["closed"] == 0 or i["closed"] == false) and a.id == i["project_id"]
           	}
 
           	total
@@ -262,7 +262,7 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
         		total = 0
 
           	@issues_by_project.each{|i| 
-							total += i["total"] if (i["closed"] == "t" or i["closed"] == 1) and a.id == i["project_id"]
+							total += i["total"] if (i["closed"] == "t" or i["closed"] == 1 or i["closed"] == true) and a.id == i["project_id"]
           	}
 
           	total
@@ -297,7 +297,7 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
         		total = 0
 
           	@issues_by_project.each{|i| 
-							total += i["total"] if (i["closed"] == "f" or  i["closed"] == 0) and a.id == i["author_id"]
+							total += i["total"] if (i["closed"] == "f" or i["closed"] == 0 or i["closed"] == false) and a.id == i["author_id"]
           	}
 
           	total
@@ -312,7 +312,7 @@ green_color = 	'fillColor : "rgba(92,184,92,0.5)",
         		total = 0
 
           	@issues_by_project.each{|i| 
-							total += i["total"] if (i["closed"] == "t" or i["closed"] == 1) and a.id == i["author_id"]
+							total += i["total"] if (i["closed"] == "t" or i["closed"] == 1 or i["closed"] == true) and a.id == i["author_id"]
           	}
 
           	total
